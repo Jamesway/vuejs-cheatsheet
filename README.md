@@ -135,6 +135,10 @@ when X happens, do Y - this directive connects events with VueJS methods.
 ### v-bind eg: v-bind:src="", v-bind:href="", v-bind:value=""
 binds an element with a VueJS property or method - commonly used with element attributes {{}} won't work with element attributes
 
+### v-model - 2 way binding
+
+
+
 ### v-html
 VueJS escapes html in string interpolation - this directive disables that so raw html is outputted. Take care not to allow user input into a v-html element or you open yourself to Cross Site Scripting.
 
@@ -166,4 +170,117 @@ new Vue({
   }
 });
 </script>
+```
+
+Note: you can shorthands for v-on: and v-bind. Replace v-on: with **@click** or **@eventType** and v-bind: with just **:href** or **:src=**
+
+
+## Events ($event)
+The JS event object is automatically passed to "v-on" directives. When passing your own parameter, use the special VueJS reserved variable ( $event ) - don't overwrite it.
+```
+# template
+<div id="app">
+  <p>{{ message }}
+  <p><button v-on:click="methodWithCustomParam('hello, you clicked a ', $event)">change the message</button>
+</div>
+
+<script>
+new Vue({
+
+  el : '#app',
+  data: {
+    message: 'Welcome to VueJS'
+  },
+  methods: {
+    methodWithCustomParam: function(newMessage, ev) { /* the default event object is passed with the VueJS $event variable */
+
+      this.message = newMessage + event.target.tagName;
+    }
+  }
+});
+</script>
+```
+
+### Event Modifiers
+```
+# eg:
+# stopPropogation
+v-on:mouseover.stop=""
+
+# preventDefault
+v-on:mouseover.prevent=""
+
+# fire someMethod on "enter" key
+v-on:keydown.enter="someMethod"
+```
+
+## CSS Styling
+VueJS styling is accomplished using a v-bind:class="" or :class  
+There are two ways to style  
+- with an object containing a class name and a boolean
+- a VueJS property that references a css class
+```
+/* css */
+.purple {
+  background-color: purple;
+}
+
+
+<!-- html template -->
+<div id="app">
+  <div :class="'purple'">1) always on</div>
+  <div :class="{'purple': true}">2) always on (verbose)</div>
+  <div :class="{'purple': isPurple}">2) switched</div>
+  <div :class="opposite">3) opposite switched</div>
+  <input @click="toggle" type="button" value="toggle">
+</div>
+
+//js
+new Vue({
+  el: '#app',
+  data: {
+		isPurple: false,
+  },
+  computed: {
+    opposite: function () {
+      return { 'purple': !this.isPurple };
+    }
+  },
+  methods: {
+  	toggle: function() {
+
+    	this.isPurple = !this.isPurple;
+    }
+  }
+});
+```
+
+### CSS Arrays
+You can mix classes together using an array. You can even mix property and objects in an array.
+```
+/* css */
+.purple {
+  background-color: purple;
+}
+.narrow {
+  width: 50px;
+}
+.tall {
+  height: 700px;
+}
+
+
+<!-- html template -->
+<div id="app">
+  <div :class="['purple', {'narrow': true}, height]">hello world</div>
+</div>
+
+//js
+new Vue({
+  el: '#app',
+  data: {
+		height: 'tall',
+  }
+});
+
 ```
