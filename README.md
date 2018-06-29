@@ -282,5 +282,42 @@ new Vue({
 		height: 'tall',
   }
 });
+```
 
+### CSS style
+Vue for styles
+```
+<!-- html template -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<div id="app">
+  <div :style="{'background-color': color}">foo bar</div>
+  <div :style="[style1, style2]">hello world</div>
+  <p>height <input type="text" v-model="height"></p>
+  <p>width <input type="text" v-model="width"></p>
+</div>
+
+//js
+new Vue({
+  el: '#app',
+  data: {
+		color: 'purple',
+    height: 100,
+    width: 100
+  },
+  computed: {
+    style1: function() {
+      return {
+        'background-color': 'pink',
+        'border': '3px solid ' + this.color
+      };
+    },
+    style2: function() {
+
+      return {
+        height: this.height + 'px',
+        width: this.width + 'px'
+      };
+    }
+  }
+});
 ```
